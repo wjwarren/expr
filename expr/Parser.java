@@ -3,7 +3,6 @@
 
 package expr;
 
-import java.io.*;
 import java.util.Hashtable;
 import java.util.Vector;
 
@@ -60,7 +59,7 @@ public class Parser {
 
     /** Set of Variable's that are allowed to appear in input expressions. 
      * If null, any variable is allowed. */
-    private Hashtable allowedVariables = null;
+    private Hashtable<Variable,Variable> allowedVariables = null;
 
     /** Adjust the set of allowed variables: create it (if not yet
      * existent) and add optVariable (if it's nonnull).  If the
@@ -70,7 +69,7 @@ public class Parser {
      * @param optVariable the variable to be allowed, or null */
     public void allow(Variable optVariable) {
 	if (null == allowedVariables) {
-	    allowedVariables = new Hashtable();
+	    allowedVariables = new Hashtable<Variable,Variable>();
 	    allowedVariables.put(pi, pi);
 	}
 	if (null != optVariable)
@@ -259,7 +258,7 @@ public class Parser {
     }
 
     private boolean tryInsertions() {
-	Vector v = tokens.tokens;
+	Vector<Token> v = tokens.tokens;
 	for (int i = tokens.index; 0 <= i; --i) {
 	    Token t;
 	    if (i < v.size()) {
@@ -283,11 +282,11 @@ public class Parser {
     }
 
     private boolean tryDeletions() {
-	Vector v = tokens.tokens;
+	Vector<Token> v = tokens.tokens;
 	for (int i = tokens.index; 0 <= i; --i) {
 	    if (v.size() <= i)
 		continue;
-	    Object t = v.elementAt(i);
+	    Token t = v.elementAt(i);
 	    v.remove(i);
 	    try {
 		reparse();
@@ -300,7 +299,7 @@ public class Parser {
     }
 
     private boolean trySubstitutions() {
-	Vector v = tokens.tokens;
+	Vector<Token> v = tokens.tokens;
 	for (int i = tokens.index; 0 <= i; --i) {
 	    if (v.size() <= i)
 		continue;

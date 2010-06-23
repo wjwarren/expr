@@ -9,8 +9,9 @@ package expr;
  * long, hopefully helpful one (with explain()).
  */
 public class SyntaxException extends Exception {
+	private static final long serialVersionUID = 3319873957365553608L;
 
-    /** An error code meaning the input string couldn't reach the end
+	/** An error code meaning the input string couldn't reach the end
         of the input; the beginning constituted a legal expression,
         but there was unparsable stuff left over. */
     public static final int INCOMPLETE = 0;

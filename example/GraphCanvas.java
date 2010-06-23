@@ -3,8 +3,8 @@ import java.awt.Color;
 import java.awt.Graphics;
 
 public class GraphCanvas extends Canvas {
-
-    private double x0, x1, y0, y1;
+	private static final long serialVersionUID = -4199607721542001426L;
+	private double x0, x1, y0, y1;
     private Curve curve;
 
     public GraphCanvas() {

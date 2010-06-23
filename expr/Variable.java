@@ -10,7 +10,8 @@ import java.util.Hashtable;
  * settable value.
  */
 public class Variable extends Expr {
-    private static Hashtable variables = new Hashtable();
+    private static Hashtable<String,Variable> variables 
+    	= new Hashtable<String,Variable>();
     
     /**
      * Return a unique variable named `name'.  There can be only one

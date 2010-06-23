@@ -3,7 +3,8 @@ import java.util.*;
 
 /** A label that can draw multiple lines of text. */
 public class MultilineLabel extends java.awt.Canvas {
-    private String myText;
+	private static final long serialVersionUID = 6574193504852550749L;
+	private String myText;
 
     public MultilineLabel(String text) {
 	myText = text;

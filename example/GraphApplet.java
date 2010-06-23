@@ -2,21 +2,20 @@ import java.applet.Applet;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.FlowLayout;
-import java.awt.Graphics;
 import java.awt.Label;
 import java.awt.Panel;
 import java.awt.TextField;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import expr.Expr;
 import expr.Parser;
 import expr.SyntaxException;
 import expr.Variable;
 
 public class GraphApplet extends Applet implements ActionListener {
+	private static final long serialVersionUID = -1251148806747069045L;
 
-    public String getAppletInfo() {
+	public String getAppletInfo() {
 	return "Draws a graph of a formula you enter.";
     }
 

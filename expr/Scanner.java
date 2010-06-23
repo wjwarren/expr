@@ -10,7 +10,7 @@ class Scanner {
     private String s;
     private String operatorChars;
 
-    Vector tokens = new Vector();
+    Vector<Token> tokens = new Vector<Token>();
     int index = -1;
 
     public Scanner(String string, String operatorChars) {

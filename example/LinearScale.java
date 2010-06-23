@@ -9,7 +9,7 @@ public final class LinearScale {
     }
 
     public int map(double mathCoord) {
-	return Math.round(origin + mathCoord * scale);
+	return (int) Math.round(origin + mathCoord * scale);
     }
 
     public double unmap(int screenCoord) {
