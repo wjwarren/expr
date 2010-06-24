@@ -1,13 +1,20 @@
 package expr;
 
-/**
- * Test for bugs in the whole package.
- */
-public class RegressionTest {
+import junit.framework.TestCase;
 
-	public static void main(String[] args) {
-		Variable.make("pi").setValue(Math.PI);
+public class RegressionTest extends TestCase {
+	private static void expect(double expected, String input) {
+		Expr expr;
+		try {
+			expr = Parser.parse(input);
+		} catch (SyntaxException e) {
+			throw new Error(e.explain());
+		}
 
+		assertEquals(expected,expr.value(),0.00001);
+	}
+
+	public void testOperators() {
 		expect(9, "3^2");
 		expect(256, "2^2^3");
 		expect(6, "3*2");
@@ -15,6 +22,9 @@ public class RegressionTest {
 		expect(5, "3+2");
 		expect(1, "3-2");
 		expect(-3, "-3");
+	}
+
+	public void testComparisions() {
 		expect(1, "2<3");
 		expect(0, "2<2");
 		expect(0, "3<2");
@@ -30,7 +40,10 @@ public class RegressionTest {
 		expect(1, "3>=2");
 		expect(0, "2>3");
 		expect(0, "2>2");
-		expect(1, "3>2");
+		expect(1, "3>2");		
+	}
+
+	public void testLogic() {
 		expect(1, "(1 and 1)");
 		expect(0, "(1 and 0)");
 		expect(0, "(0 and 1)");
@@ -39,6 +52,9 @@ public class RegressionTest {
 		expect(1, "(1 or 0)");
 		expect(1, "(0 or 1)");
 		expect(0, "(0 or 0)");
+	}
+
+	public void testFunctions() {
 		expect(2, "abs(-2)");
 		expect(2, "abs(2)");
 		expect(0, "acos(1)");
@@ -61,26 +77,18 @@ public class RegressionTest {
 		expect(2, "min(2, 3)");
 		expect(137, "if(0, 42, 137)");
 		expect(42, "if(1, 42, 137)");
+	}
 
+	public void testPower() {
 		expect(-3.0 * Math.pow(1.01, 100.1), "  -3 * 1.01^100.1  ");
+	}
 
+	public void testSubstitution() {
 		Variable x = Variable.make("x");
 		x.setValue(-40.0);
 		expect(-171.375208, "-0.00504238 * x^2 + 2.34528 * x - 69.4962");
 
-		{
-			boolean caught = false;
-			Parser p = new Parser();
-			p.allow(x); // or p.allow(null);
-			try {
-				p.parseString("whoo");
-			} catch (SyntaxException se) {
-				caught = true;
-			}
-			if (!caught)
-				throw new Error("Test failed: unknown variable allowed");
-		}
-
+		Variable.make("pi").setValue(Math.PI);
 		x.setValue(1.1);
 
 		expect(137, "137");
@@ -102,24 +110,21 @@ public class RegressionTest {
 		expect(-2.2199999999999998, "-2*(x-3)^2+5");
 		expect(1.2000000000000002, "2*abs(x+1)-3");
 		expect(2.7910571473905725, "sqrt(9-x^2)");
-
-		System.out.println("All tests passed.");
 	}
-
-	private static void expect(double expected, String input) {
-		Expr expr;
+	public void testUnallowedAnyVariable() {
+		Parser p = new Parser();
+		p.allow(null);
 		try {
-			expr = Parser.parse(input);
-		} catch (SyntaxException e) {
-			throw new Error(e.explain());
-		}
-
-		double result = expr.value();
-		if (result != expected) {
-			throw new Error("Bad result: " + result
-					+ " instead of the expected " + expected + " in \"" + input
-					+ "\"");
-		}
+			p.parseString("x");
+			fail();
+		} catch (SyntaxException se) {}
 	}
-
+	public void UnallowedVariable() {
+		Parser p = new Parser();
+		p.allow(Variable.make("x"));
+		try {
+			p.parseString("w");
+			fail();
+		} catch (SyntaxException se) {}
+	}
 }
