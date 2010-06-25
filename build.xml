@@ -1,0 +1,50 @@
+<?xml version="1.0"?>
+
+<project name="expr" default="jar" basedir=".">
+	<description>
+		This package parses and evaluates mathematical expressions over
+		floating-point numbers, like `2 + 2` or `cos(x/(2*pi)) * cos(y/(2*pi))`.
+
+		The design priorities were ease of use with helpful error messages,
+		ease of integration into applets, and good performance: fast
+		evaluation and short download times.  Features and flexibility were
+		not high priorities, but the code is simple enough that it shouldn't
+		be hard to change to your taste.
+	</description>
+
+	<property file="build.properties" />
+	<!--<property name="project.name" value="expr" />
+	<property name="source.version" value="${ant.java.version}" />
+	<property name="compiler.args" value="-Xlint" />-->
+	<property name="dir.build" value="ant-bin" />
+	<property name="dir.javadoc" value="jdoc" />
+	<property name="jdoc.public" value="${dir.javadoc}/public" />
+	<property name="jdoc.private" value="${dir.javadoc}/private" />
+	<property name="dir.src" value="expr"/>
+
+	<target name="init">
+		<mkdir dir="${dir.build}"/>
+	</target>
+	<target name="compile" depends="init">
+		<javac srcdir="expr" destdir="${dir.build}"/>
+	</target>
+	<target name="jar" depends="compile">
+		<jar basedir="${dir.build}" destfile="expr.jar"/>
+	</target>
+	<target name="jdoc-public">
+		<javadoc excludepackagenames="expr.test" access="public" destdir="${jdoc.public}" use="true">
+			<link href="http://java.sun.com/j2se/1.5.0/docs/api/"/>
+			<fileset dir="${dir.src}" defaultexcludes="yes" includes="**/*.java" excludes="test/**/*.java" />
+		</javadoc>
+	</target>
+	<target name="jdoc-private">
+		<javadoc access="private" destdir="${jdoc.private}" use="true">
+			<link href="http://java.sun.com/j2se/1.5.0/docs/api/"/>
+			<fileset dir="${dir.src}" defaultexcludes="yes" includes="**/*.java"/>
+		</javadoc>
+	</target>
+	<target name="clean">
+		<delete dir="${dir.build}" />
+		<delete dir="${dir.javadoc}" />
+	</target>
+</project>

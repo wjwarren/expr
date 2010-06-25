@@ -1,6 +1,11 @@
 // Run benchmarks from the command line.
 
-package expr;
+package expr.test;
+
+import expr.Expr;
+import expr.Parser;
+import expr.SyntaxException;
+import expr.Variable;
 
 /**
  * Time evaluating many expressions over many values.

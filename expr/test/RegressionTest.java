@@ -1,5 +1,9 @@
-package expr;
+package expr.test;
 
+import expr.Expr;
+import expr.Parser;
+import expr.SyntaxException;
+import expr.Variable;
 import junit.framework.TestCase;
 
 public class RegressionTest extends TestCase {
