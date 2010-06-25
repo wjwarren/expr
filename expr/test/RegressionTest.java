@@ -4,6 +4,7 @@ import expr.Expr;
 import expr.Parser;
 import expr.SyntaxException;
 import expr.Variable;
+import expr.VariableFactory;
 import junit.framework.TestCase;
 
 public class RegressionTest extends TestCase {
@@ -88,11 +89,11 @@ public class RegressionTest extends TestCase {
 	}
 
 	public void testSubstitution() {
-		Variable x = Variable.make("x");
+		Variable x = VariableFactory.make("x");
 		x.setValue(-40.0);
 		expect(-171.375208, "-0.00504238 * x^2 + 2.34528 * x - 69.4962");
 
-		Variable.make("pi").setValue(Math.PI);
+		VariableFactory.make("pi").setValue(Math.PI);
 		x.setValue(1.1);
 
 		expect(137, "137");
@@ -125,7 +126,7 @@ public class RegressionTest extends TestCase {
 	}
 	public void UnallowedVariable() {
 		Parser p = new Parser();
-		p.allow(Variable.make("x"));
+		p.allow(VariableFactory.make("x"));
 		try {
 			p.parseString("w");
 			fail();

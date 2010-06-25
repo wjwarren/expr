@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 
-<project name="expr" default="jar" basedir=".">
+<project name="expr" default="all" basedir=".">
 	<description>
 		This package parses and evaluates mathematical expressions over
 		floating-point numbers, like `2 + 2` or `cos(x/(2*pi)) * cos(y/(2*pi))`.
@@ -22,7 +22,9 @@
 	<property name="jdoc.private" value="${dir.javadoc}/private" />
 	<property name="dir.src" value="expr"/>
 
-	<target name="init">
+	<target name="all" depends="clean,init,jar,test,jdoc-public,jdoc-private" />
+
+	<target name="init" depends="clean">
 		<mkdir dir="${dir.build}"/>
 	</target>
 	<target name="compile" depends="init">
@@ -30,6 +32,18 @@
 	</target>
 	<target name="jar" depends="compile">
 		<jar basedir="${dir.build}" destfile="expr.jar"/>
+	</target>
+	<target name="compile-test" depends="jar">
+		<javac srcdir="expr/test" destdir="${dir.build}"/>
+	</target>
+	<target name="test" depends="compile-test">
+		<path id="test.classpath">
+			<pathelement location="${dir.build}"/>
+		</path>
+		<junit printsummary="yes" fork="no" haltonfailure="yes">
+			<test name="expr.test.RegressionTest" />
+			<classpath refid="test.classpath"/>
+		</junit>
 	</target>
 	<target name="jdoc-public">
 		<javadoc excludepackagenames="expr.test" access="public" destdir="${jdoc.public}" use="true">

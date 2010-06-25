@@ -45,7 +45,7 @@ import java.util.Vector;
 public class Parser {
 
 	// Built-in constants
-	static private final Variable pi = Variable.make("pi");
+	static private final Variable pi = VariableFactory.make("pi");
 	static {
 		pi.setValue(Math.PI);
 	}
@@ -133,73 +133,73 @@ public class Parser {
 			case '<':
 				l = 20;
 				r = 21;
-				rator = Expr.LT;
+				rator = ExprConstants.LT;
 				break;
 			case Token.TT_LE:
 				l = 20;
 				r = 21;
-				rator = Expr.LE;
+				rator = ExprConstants.LE;
 				break;
 			case '=':
 				l = 20;
 				r = 21;
-				rator = Expr.EQ;
+				rator = ExprConstants.EQ;
 				break;
 			case Token.TT_NE:
 				l = 20;
 				r = 21;
-				rator = Expr.NE;
+				rator = ExprConstants.NE;
 				break;
 			case Token.TT_GE:
 				l = 20;
 				r = 21;
-				rator = Expr.GE;
+				rator = ExprConstants.GE;
 				break;
 			case '>':
 				l = 20;
 				r = 21;
-				rator = Expr.GT;
+				rator = ExprConstants.GT;
 				break;
 
 			case '+':
 				l = 30;
 				r = 31;
-				rator = Expr.ADD;
+				rator = ExprConstants.ADD;
 				break;
 			case '-':
 				l = 30;
 				r = 31;
-				rator = Expr.SUB;
+				rator = ExprConstants.SUB;
 				break;
 
 			case '/':
 				l = 40;
 				r = 41;
-				rator = Expr.DIV;
+				rator = ExprConstants.DIV;
 				break;
 			case '*':
 				l = 40;
 				r = 41;
-				rator = Expr.MUL;
+				rator = ExprConstants.MUL;
 				break;
 
 			case '^':
 				l = 50;
 				r = 50;
-				rator = Expr.POW;
+				rator = ExprConstants.POW;
 				break;
 
 			default:
 				if (token.ttype == Token.TT_WORD && token.sval.equals("and")) {
 					l = 5;
 					r = 6;
-					rator = Expr.AND;
+					rator = ExprConstants.AND;
 					break;
 				}
 				if (token.ttype == Token.TT_WORD && token.sval.equals("or")) {
 					l = 10;
 					r = 11;
-					rator = Expr.OR;
+					rator = ExprConstants.OR;
 					break;
 				}
 				break loop;
@@ -209,24 +209,24 @@ public class Parser {
 				break loop;
 
 			nextToken();
-			expr = Expr.makeApp2(rator, expr, parseExpr(r));
+			expr = ExprFactory.makeApp2(rator, expr, parseExpr(r));
 		}
 		return expr;
 	}
 
 	static private final String[] procs1 = { "abs", "acos", "asin", "atan",
 			"ceil", "cos", "exp", "floor", "log", "round", "sin", "sqrt", "tan" };
-	static private final int[] rators1 = { Expr.ABS, Expr.ACOS, Expr.ASIN,
-			Expr.ATAN, Expr.CEIL, Expr.COS, Expr.EXP, Expr.FLOOR, Expr.LOG,
-			Expr.ROUND, Expr.SIN, Expr.SQRT, Expr.TAN };
+	static private final int[] rators1 = { ExprConstants.ABS, ExprConstants.ACOS, ExprConstants.ASIN,
+		ExprConstants.ATAN, ExprConstants.CEIL, ExprConstants.COS, ExprConstants.EXP, ExprConstants.FLOOR, ExprConstants.LOG,
+		ExprConstants.ROUND, ExprConstants.SIN, ExprConstants.SQRT, ExprConstants.TAN };
 
 	static private final String[] procs2 = { "atan2", "max", "min" };
-	static private final int[] rators2 = { Expr.ATAN2, Expr.MAX, Expr.MIN };
+	static private final int[] rators2 = { ExprConstants.ATAN2, ExprConstants.MAX, ExprConstants.MIN };
 
 	private Expr parseFactor() throws SyntaxException {
 		switch (token.ttype) {
 		case Token.TT_NUMBER: {
-			Expr lit = Expr.makeLiteral(token.nval);
+			Expr lit = ExprFactory.makeLiteral(token.nval);
 			nextToken();
 			return lit;
 		}
@@ -237,7 +237,7 @@ public class Parser {
 					expect('(');
 					Expr rand = parseExpr(0);
 					expect(')');
-					return Expr.makeApp1(rators1[i], rand);
+					return ExprFactory.makeApp1(rators1[i], rand);
 				}
 
 			for (int i = 0; i < procs2.length; ++i)
@@ -248,7 +248,7 @@ public class Parser {
 					expect(',');
 					Expr rand2 = parseExpr(0);
 					expect(')');
-					return Expr.makeApp2(rators2[i], rand1, rand2);
+					return ExprFactory.makeApp2(rators2[i], rand1, rand2);
 				}
 
 			if (token.sval.equals("if")) {
@@ -260,10 +260,10 @@ public class Parser {
 				expect(',');
 				Expr alternative = parseExpr(0);
 				expect(')');
-				return Expr.makeIfThenElse(test, consequent, alternative);
+				return ExprFactory.makeIfThenElse(test, consequent, alternative);
 			}
 
-			Expr var = Variable.make(token.sval);
+			Expr var = VariableFactory.make(token.sval);
 			if (null != allowedVariables && null == allowedVariables.get(var))
 				throw error("Unknown variable",
 						SyntaxException.UNKNOWN_VARIABLE, null);
@@ -278,7 +278,7 @@ public class Parser {
 		}
 		case '-':
 			nextToken();
-			return Expr.makeApp1(Expr.NEG, parseExpr(35));
+			return ExprFactory.makeApp1(ExprConstants.NEG, parseExpr(35));
 		case Token.TT_EOF:
 			throw error("Expected a factor", SyntaxException.PREMATURE_EOF,
 					null);

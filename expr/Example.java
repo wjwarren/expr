@@ -43,7 +43,7 @@ public class Example {
 		double high = Double.valueOf(args[2]).doubleValue();
 		double step = Double.valueOf(args[3]).doubleValue();
 
-		Variable x = Variable.make("x");
+		Variable x = VariableFactory.make("x");
 		for (double xval = low; xval <= high; xval += step) {
 			x.setValue(xval);
 			System.out.println(expr.value());

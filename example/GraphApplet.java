@@ -11,6 +11,7 @@ import java.awt.event.ActionListener;
 import expr.Parser;
 import expr.SyntaxException;
 import expr.Variable;
+import expr.VariableFactory;
 
 public class GraphApplet extends Applet implements ActionListener {
 	private static final long serialVersionUID = -1251148806747069045L;
@@ -55,7 +56,7 @@ public class GraphApplet extends Applet implements ActionListener {
     }
 
     private Curve parseFofX(String text, Color color) throws SyntaxException {
-	Variable x = Variable.make("x");
+	Variable x = VariableFactory.make("x");
 	Parser parser = new Parser();
 	parser.allow(x);
 	return new FunctionOfX(canvas, color, x, parser.parseString(text));

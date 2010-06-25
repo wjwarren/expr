@@ -6,6 +6,7 @@ import expr.Expr;
 import expr.Parser;
 import expr.SyntaxException;
 import expr.Variable;
+import expr.VariableFactory;
 
 /**
  * Time evaluating many expressions over many values.
@@ -38,7 +39,7 @@ public class Benchmark {
 	static final int nruns = 1000000;
 
 	static long timeRun(String expression) {
-		Variable x = Variable.make("x");
+		Variable x = VariableFactory.make("x");
 		Expr expr = parse(expression);
 
 		double low  = 0.0;
