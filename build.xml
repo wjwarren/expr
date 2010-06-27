@@ -21,6 +21,9 @@
 	<property name="jdoc.public" value="${dir.javadoc}/public" />
 	<property name="jdoc.private" value="${dir.javadoc}/private" />
 	<property name="dir.src" value="expr"/>
+	<path id="test.classpath">
+		<pathelement location="${dir.build}"/>
+	</path>
 
 	<target name="all" depends="clean,init,jar,test,jdoc-public,jdoc-private" />
 
@@ -37,13 +40,13 @@
 		<javac srcdir="expr/test" destdir="${dir.build}"/>
 	</target>
 	<target name="test" depends="compile-test">
-		<path id="test.classpath">
-			<pathelement location="${dir.build}"/>
-		</path>
 		<junit printsummary="yes" fork="no" haltonfailure="yes">
 			<test name="expr.test.RegressionTest" />
 			<classpath refid="test.classpath"/>
 		</junit>
+	</target>
+	<target name="benchmark" depends="compile-test">
+		<exec executable="./benchmark.sh" output="last-benchmark-run" />
 	</target>
 	<target name="jdoc-public">
 		<javadoc excludepackagenames="expr.test" access="public" destdir="${jdoc.public}" use="true">

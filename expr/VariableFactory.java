@@ -21,7 +21,38 @@ public class VariableFactory {
 	static public synchronized Variable make(String name) {
 		Variable result = variables.get(name);
 		if (result == null)
-			variables.put(name, result = new Variable(name));
+			variables.put(name, result = new VariableObj(name));
 		return result;
+	}
+}
+
+final class VariableObj implements Variable {
+	private String name;
+	private double val;
+
+	/**
+	 * Create a new variable, with initial value 0.
+	 * 
+	 * @param name
+	 *            the variable's name
+	 */
+	public VariableObj(String name) {
+		this.name = name;
+		val = 0;
+	}
+
+	@Override
+	public String toString() {
+		return name;
+	}
+
+	@Override
+	public double value() {
+		return val;
+	}
+
+	@Override
+	public void setValue(double value) {
+		val = value;
 	}
 }

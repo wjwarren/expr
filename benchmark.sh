@@ -1,4 +1,5 @@
-java expr.Benchmark \
+cd ant-bin
+java expr.test.Benchmark \
  '137' \
  'pi' \
  'x' \

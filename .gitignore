@@ -3,3 +3,4 @@ expr.jar
 *.swp
 ant-bin
 jdoc
+last-benchmark-run
