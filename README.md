@@ -49,9 +49,10 @@ explanation:
 
 Parse the string in `args[0]` and set `expr` to the representation of
 the result.  We only parse the string once, so that later on we won't
-have to parse it each time we evaluate it.
+have to parse it each time we evaluate it. This is done by creating an
+expr.Parser() object and calling parserString off of it.
 
-    try { expr = Parser.parse(args[0]); }
+    try { expr = (new Parser()).parseString(args[0]); }
 
 If the string couldn't be parsed, complain and abort.  The `e.explain()`
 tries to describe exactly what went wrong.

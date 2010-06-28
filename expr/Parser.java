@@ -35,6 +35,9 @@ import java.util.Vector;
  * Whitespace outside identifiers is ignored.
  * 
  * <P>
+ * The constant 'pi' is built in and equal to the value returned by Math.PI
+ * 
+ * <P>
  * Examples:
  * <UL>
  * <LI>42
@@ -43,25 +46,15 @@ import java.util.Vector;
  * <UL>
  */
 public class Parser {
-
-	// Built-in constants
-	static private final Variable pi = VariableFactory.make("pi");
-	static {
-		pi.setValue(Math.PI);
-	}
-
-	/**
-	 * Return the expression denoted by the input string.
-	 * 
-	 * @param input
-	 *            the unparsed expression
-	 * @exception SyntaxException
-	 *                if the input is unparsable
+	
+	/*
+	 * This must be here in order to initialize ExprConstants by the time
+	 * this class loads.
 	 */
-	static public Expr parse(String input) throws SyntaxException {
-		return new Parser().parseString(input);
+	static {
+		ExprConstants.pi.setValue(Math.PI);
 	}
-
+	
 	/**
 	 * Set of Variable's that are allowed to appear in input expressions. If
 	 * null, any variable is allowed.
@@ -79,13 +72,16 @@ public class Parser {
 	public void allow(Variable optVariable) {
 		if (null == allowedVariables) {
 			allowedVariables = new Hashtable<Variable, Variable>();
-			allowedVariables.put(pi, pi);
+			allowedVariables.put(ExprConstants.pi, ExprConstants.pi);
 		}
 		if (null != optVariable)
 			allowedVariables.put(optVariable, optVariable);
 	}
 
-	Scanner tokens = null;
+	/** Scanner for input left (deliminated by {@code operatorChars}). */
+	private Scanner tokens = null;
+	
+	/** Currently processed token **/
 	private Token token = null;
 
 	/**
@@ -101,6 +97,7 @@ public class Parser {
 		return reparse();
 	}
 
+	/** Special characters which may separate tokens */
 	static private final String operatorChars = "*/+-^<>=,()";
 
 	private Expr reparse() throws SyntaxException {
@@ -214,13 +211,17 @@ public class Parser {
 		return expr;
 	}
 
+	/** names of unary operators */
 	static private final String[] procs1 = { "abs", "acos", "asin", "atan",
 			"ceil", "cos", "exp", "floor", "log", "round", "sin", "sqrt", "tan" };
+	/** list of int codes in same order as @{code procs1} */
 	static private final int[] rators1 = { ExprConstants.ABS, ExprConstants.ACOS, ExprConstants.ASIN,
 		ExprConstants.ATAN, ExprConstants.CEIL, ExprConstants.COS, ExprConstants.EXP, ExprConstants.FLOOR, ExprConstants.LOG,
 		ExprConstants.ROUND, ExprConstants.SIN, ExprConstants.SQRT, ExprConstants.TAN };
 
+	/** names of binary operators */
 	static private final String[] procs2 = { "atan2", "max", "min" };
+	/** list of int codes in same order as @{code procs2} */
 	static private final int[] rators2 = { ExprConstants.ATAN2, ExprConstants.MAX, ExprConstants.MIN };
 
 	private Expr parseFactor() throws SyntaxException {
@@ -288,7 +289,7 @@ public class Parser {
 	}
 
 	private SyntaxException error(String complaint, int reason, String expected) {
-		return new SyntaxException(complaint, this, reason, expected);
+		return new SyntaxException(complaint, this, reason, tokens, expected);
 	}
 
 	private void expect(int ttype) throws SyntaxException {

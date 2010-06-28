@@ -63,9 +63,10 @@ public class Benchmark {
 		return System.nanoTime() - start;
 	}
 
+	static Parser _parser = new Parser();
 	static Expr parse(String expression) {
 		try {
-			return Parser.parse(expression); 
+			return _parser.parseString(expression); 
 		} catch (SyntaxException e) {
 			System.err.println(e.explain());
 			throw new Error(e);

@@ -5,7 +5,9 @@ package expr;
 
 /**
  * A variable is a simple expression with a name (like "x") and a settable
- * value.
+ * value. These are created with the {@code VariableFactory.make} method.
+ * 
+ * @see VariableFactory
  */
 public interface Variable extends Expr {
 	/**

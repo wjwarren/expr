@@ -56,16 +56,17 @@ public class SyntaxException extends Exception {
 	 *            the erroneous token it did see)
 	 */
 	public SyntaxException(String complaint, Parser parser, int reason,
-			String expected) {
+			Scanner tokens, String expected) {
 		super(complaint);
 		this.reason = reason;
 		this.parser = parser;
-		this.scanner = parser.tokens;
+		this.scanner = tokens;
 		this.expected = expected;
 	}
 
 	/**
 	 * Give a long, hopefully helpful error message.
+	 * Callers should expect and handle a mult-line message.
 	 * 
 	 * @return the message
 	 */

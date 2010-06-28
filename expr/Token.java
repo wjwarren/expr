@@ -1,4 +1,6 @@
-// A lexical token from an input string.
+/**
+ *  A lexical token from an input string.
+ */
 
 package expr;
 

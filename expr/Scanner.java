@@ -1,4 +1,6 @@
-// Scan lexical tokens in input strings.
+/**
+ *  Scan lexical tokens in input strings.
+ */
 
 package expr;
 

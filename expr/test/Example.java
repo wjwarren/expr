@@ -39,7 +39,7 @@ public class Example {
 
 		Expr expr;
 		try {
-			expr = Parser.parse(args[0]);
+			expr = (new Parser()).parseString(args[0]);
 		} catch (SyntaxException e) {
 			System.err.println(e.explain());
 			return;

@@ -1,7 +1,13 @@
 package expr;
 
+/**
+ * Class containing the constants in use by this package.
+ */
 final class ExprConstants {
 	private ExprConstants() {}
+	
+	/** pi Variable */
+	static final Variable pi = VariableFactory.make("pi");
 
 	/** Binary operator: addition */
 	static final int ADD = 0;

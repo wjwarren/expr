@@ -1,6 +1,9 @@
 package expr;
 
-public final class ExprFactory {
+/**
+ * Static factory for creating the four types of expressions possible.
+ */
+final class ExprFactory {
 	private ExprFactory() {}
 	/**
 	 * Make a literal expression.
@@ -9,7 +12,7 @@ public final class ExprFactory {
 	 *            the constant value of the expression
 	 * @return an expression whose value is always v
 	 */
-	public static Expr makeLiteral(double v) {
+	static Expr makeLiteral(double v) {
 		return new LiteralExpr(v);
 	}
 

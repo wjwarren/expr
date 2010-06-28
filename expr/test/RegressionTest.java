@@ -8,10 +8,11 @@ import expr.VariableFactory;
 import junit.framework.TestCase;
 
 public class RegressionTest extends TestCase {
+	private static Parser _parser = new Parser();
 	private static void expect(double expected, String input) {
 		Expr expr;
 		try {
-			expr = Parser.parse(input);
+			expr = _parser.parseString(input);
 		} catch (SyntaxException e) {
 			throw new Error(e.explain());
 		}
