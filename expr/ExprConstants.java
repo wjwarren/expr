@@ -1,6 +1,7 @@
 package expr;
 
-class ExprConstants {
+final class ExprConstants {
+	private ExprConstants() {}
 
 	/** Binary operator: addition */
 	static final int ADD = 0;

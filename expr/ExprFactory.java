@@ -1,6 +1,7 @@
 package expr;
 
-public class ExprFactory {
+public final class ExprFactory {
+	private ExprFactory() {}
 	/**
 	 * Make a literal expression.
 	 * 
@@ -66,22 +67,22 @@ public class ExprFactory {
 	}
 }
 
-class LiteralExpr implements Expr {
-	double v;
+final class LiteralExpr implements Expr {
+	final double v;
 
 	LiteralExpr(double v) {
 		this.v = v;
 	}
 
 	@Override
-	public double value() {
+	public final double value() {
 		return v;
 	}
 }
 
-class UnaryExpr implements Expr {
-	int rator;
-	Expr rand;
+final class UnaryExpr implements Expr {
+	final int rator;
+	final Expr rand;
 
 	UnaryExpr(int rator, Expr rand) {
 		this.rator = rator;
@@ -90,7 +91,7 @@ class UnaryExpr implements Expr {
 
 	@Override
 	public double value() {
-		double arg = rand.value();
+		final double arg = rand.value();
 		switch (rator) {
 		case ExprConstants.ABS:
 			return Math.abs(arg);
@@ -126,9 +127,9 @@ class UnaryExpr implements Expr {
 	}
 }
 
-class BinaryExpr implements Expr {
-	int rator;
-	Expr rand0, rand1;
+final class BinaryExpr implements Expr {
+	final int rator;
+	final Expr rand0, rand1;
 
 	BinaryExpr(int rator, Expr rand0, Expr rand1) {
 		this.rator = rator;
@@ -138,8 +139,8 @@ class BinaryExpr implements Expr {
 
 	@Override
 	public double value() {
-		double arg0 = rand0.value();
-		double arg1 = rand1.value();
+		final double arg0 = rand0.value();
+		final double arg1 = rand1.value();
 		switch (rator) {
 		case ExprConstants.ADD:
 			return arg0 + arg1;
@@ -179,8 +180,8 @@ class BinaryExpr implements Expr {
 	}
 }
 
-class ConditionalExpr implements Expr {
-	Expr test, consequent, alternative;
+final class ConditionalExpr implements Expr {
+	final Expr test, consequent, alternative;
 
 	ConditionalExpr(Expr test, Expr consequent, Expr alternative) {
 		this.test = test;

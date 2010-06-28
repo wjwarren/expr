@@ -124,7 +124,7 @@ public class RegressionTest extends TestCase {
 			fail();
 		} catch (SyntaxException se) {}
 	}
-	public void UnallowedVariable() {
+	public void testUnallowedVariable() {
 		Parser p = new Parser();
 		p.allow(VariableFactory.make("x"));
 		try {

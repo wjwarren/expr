@@ -43,6 +43,7 @@
 		<junit printsummary="yes" fork="no" haltonfailure="yes">
 			<test name="expr.test.RegressionTest" />
 			<classpath refid="test.classpath"/>
+			<formatter type="brief" usefile="no" />
 		</junit>
 	</target>
 	<target name="benchmark" depends="compile-test">

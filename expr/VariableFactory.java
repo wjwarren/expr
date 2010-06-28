@@ -7,6 +7,7 @@ import java.util.Hashtable;
  * for each variable.
  */
 public class VariableFactory {
+	private VariableFactory() {}
 	private static Hashtable<String, Variable> variables = new Hashtable<String, Variable>();
 
 	/**

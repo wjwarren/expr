@@ -23,7 +23,13 @@
 // I expected ")" at that point, instead.
 // An example of a formula I can parse is "sin (pi/4 + x)".
 
-package expr;
+package expr.test;
+
+import expr.Expr;
+import expr.Parser;
+import expr.SyntaxException;
+import expr.Variable;
+import expr.VariableFactory;
 
 /**
  * A simple example of parsing and evaluating an expression.

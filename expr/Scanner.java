@@ -9,12 +9,13 @@ class Scanner {
 	private String s;
 	private String operatorChars;
 
-	Vector<Token> tokens = new Vector<Token>();
+	Vector<Token> tokens;
 	int index = -1;
 
 	public Scanner(String string, String operatorChars) {
 		this.s = string;
 		this.operatorChars = operatorChars;
+		this.tokens = new Vector<Token>(string.length());
 
 		int i = 0;
 		do {
