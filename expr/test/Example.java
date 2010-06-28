@@ -2,21 +2,21 @@
 
 // Sample usage:
 
-// $ java expr.Example '3.14159 * x^2' 0 4 1
+// $ java expr.test.Example '3.14159 * x^2' 0 4 1
 // 0
 // 3.14159
 // 12.5664
 // 28.2743
 // 50.2654
 //
-// $ java expr.Example 'sin (pi/4 * x)' 0 4 1
+// $ java expr.test.Example 'sin (pi/4 * x)' 0 4 1
 // 0
 // 0.707107
 // 1
 // 0.707107
 // 1.22461e-16
 //
-// $ java expr.Example 'sin (pi/4 x)' 0 4 1
+// $ java expr.test.Example 'sin (pi/4 x)' 0 4 1
 // I don't understand your formula "sin (pi/4 x)".
 // 
 // I got as far as "sin (pi/4" and then saw "x".

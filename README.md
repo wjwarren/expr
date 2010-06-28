@@ -10,23 +10,21 @@ evaluation and short download times.  Features and flexibility were
 not high priorities, but the code is simple enough that it shouldn't
 be hard to change to your taste.
 
-Javadoc comments in the source files give full documentation, and
-[user-doc.html](expr/blob/master/doc/user-doc.html) gives a user's-eye
-view.
+Javadoc comments in the source files give full documentation.
 
 
 Installing it
 =============
 
 To install, put `expr.jar` in your classpath. (You'll need to create
-it first by running `make`, if you downloaded this from GitHub.)
+it first by running `ant`, if you downloaded this from GitHub.)
 
 To try it out, put the `expr` directory in your classpath.  Then
 
-	java expr.Example '3.14159 * x^2' 0 4 1
+	java expr.test.Example '3.14159 * x^2' 0 4 1
 
 should write the output given in
-[Example.java](expr/blob/master/expr/Example.java).
+[Example.java](expr/blob/master/expr/test/Example.java).
 
 To incorporate this code into an applet, put expr.jar somewhere
 accessible to your webserver, and reference it with the ARCHIVE
@@ -37,15 +35,11 @@ attribute in your HTML:
 		...>
 	</APPLET>
 
-To provide documentation for your users, put
-[user-doc.html](expr/blob/master/doc/user-doc.html) where they can read it.
-
-
 Using it
 ========
 
 To get started quickly without reading the documentation, see the
-example code in [Example.java](expr/blob/master/expr/Example.java).
+example code in [Example.java](expr/blob/master/expr/test/Example.java).
 Here are some excerpts from it, with each bit preceded by an
 explanation:
 
@@ -72,7 +66,7 @@ Create a variable-object for `x`, so that we can control the value that
 expression is parsed from `1 + x * x`, its value will depend on what
 we set `x` to.
       
-    Variable x = Variable.make("x");
+    Variable x = VariableFactory.make("x");
 
 For values of `x` in the range from `low` to `high`, increasing by
 `step`, print out the value of the expression.
@@ -81,9 +75,6 @@ For values of `x` in the range from `low` to `high`, increasing by
         x.setValue(xval);
         System.out.println(expr.value());
     }
-
-There's another included example: the graphing applet in
-[example.html](expr/blob/master/example/example.html).
 
 
 Other features
@@ -94,7 +85,7 @@ more lines, you can help the parser catch more errors.  By default, it
 allows any variable to be in the input expression, even variables you
 haven't defined.  Here's how to tell it what's allowed:
 
-    Variable x = Variable.make("x");
+    Variable x = VariableFactory.make("x");
     Parser parser = new Parser();
     parser.allow(x);
 
@@ -113,4 +104,5 @@ Contact
 =======
 
 See the file [COPYING](expr/blob/master/COPYING) for copyright info.
-Send questions and bug reports to Darius Bacon <darius@wry.me>.
+Send questions and bug reports to Joseph Booker <joe@neoturbine.net>.
+Most of this library is originally by Darius Bacon <darius@wry.me>.

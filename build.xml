@@ -17,7 +17,7 @@
 	<property name="source.version" value="${ant.java.version}" />
 	<property name="compiler.args" value="-Xlint" />-->
 	<property name="dir.build" value="ant-bin" />
-	<property name="dir.javadoc" value="jdoc" />
+	<property name="dir.javadoc" value="doc" />
 	<property name="jdoc.public" value="${dir.javadoc}/public" />
 	<property name="jdoc.private" value="${dir.javadoc}/private" />
 	<property name="dir.src" value="expr"/>
