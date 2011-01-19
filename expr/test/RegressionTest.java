@@ -1,5 +1,7 @@
 package expr.test;
 
+import java.lang.reflect.Field;
+
 import expr.Expr;
 import expr.Parser;
 import expr.SyntaxException;
@@ -8,8 +10,9 @@ import expr.VariableFactory;
 import junit.framework.TestCase;
 
 public class RegressionTest extends TestCase {
-	private static Parser _parser = new Parser();
-	private static void expect(double expected, String input) {
+	private Parser _parser = new Parser();
+
+	private void expect(double expected, String input) {
 		Expr expr;
 		try {
 			expr = _parser.parseString(input);
@@ -17,7 +20,7 @@ public class RegressionTest extends TestCase {
 			throw new Error(e.explain());
 		}
 
-		assertEquals(expected,expr.value(),0.00001);
+		assertEquals(expected, expr.value(), 0.00001);
 	}
 
 	public void testOperators() {
@@ -46,7 +49,7 @@ public class RegressionTest extends TestCase {
 		expect(1, "3>=2");
 		expect(0, "2>3");
 		expect(0, "2>2");
-		expect(1, "3>2");		
+		expect(1, "3>2");
 	}
 
 	public void testLogic() {
@@ -91,15 +94,16 @@ public class RegressionTest extends TestCase {
 
 	public void testSubstitution() {
 		Variable x = VariableFactory.make("x");
+		_parser.allow(x);
 		x.setValue(-40.0);
 		expect(-171.375208, "-0.00504238 * x^2 + 2.34528 * x - 69.4962");
 
-		VariableFactory.make("pi").setValue(Math.PI);
 		x.setValue(1.1);
 
 		expect(137, "137");
 		expect(Math.PI, "pi");
 		expect(1.1, "x");
+		// expect(0,"y");
 		expect(3.8013239000000003, "3.14159 * x^2");
 		expect(-1.457526100326025, "sin(10*x) + sin(9*x)");
 		expect(0.8907649332805846, "sin(x) + sin(100*x)/100");
@@ -112,25 +116,46 @@ public class RegressionTest extends TestCase {
 		expect(3.1953090617340916, "sqrt(3^2 + x^2)");
 		expect(1.3542460218188073, "atan(5/x)");
 		expect(1.5761904761904764, "(x^2 + x + 1)/(x + 1)");
+		expect(4.84, "4*x^2");
+		expect(-3.509, "x^3 - (4*x^2)");
+		expect(8.491, "x^3 - (4*x^2) + 12");
 		expect(2.6451713395638627, "(x^3 - (4*x^2) + 12)/(x^2 + 2)");
 		expect(-2.2199999999999998, "-2*(x-3)^2+5");
 		expect(1.2000000000000002, "2*abs(x+1)-3");
 		expect(2.7910571473905725, "sqrt(9-x^2)");
 	}
+
 	public void testUnallowedAnyVariable() {
 		Parser p = new Parser();
 		p.allow(null);
 		try {
 			p.parseString("x");
 			fail();
-		} catch (SyntaxException se) {}
+		} catch (SyntaxException se) {
+		}
 	}
+
 	public void testUnallowedVariable() {
 		Parser p = new Parser();
 		p.allow(VariableFactory.make("x"));
 		try {
 			p.parseString("w");
 			fail();
-		} catch (SyntaxException se) {}
+		} catch (SyntaxException se) {
+		}
+	}
+
+	public void testOptimizer() throws SyntaxException, SecurityException, NoSuchFieldException, IllegalArgumentException, IllegalAccessException {
+		Variable x = VariableFactory.make("x");
+		Parser p = new Parser();
+		p.allow(x);
+		assertEquals("PolynomialExpr", p.parseString("x-x^3").getClass()
+				.getSimpleName());
+		
+		Expr myexp = p.parseString("x-x^3");
+		Field variableField = myexp.getClass().getDeclaredField("var");
+		variableField.setAccessible(true);
+		Expr var = (Expr)variableField.get(myexp);
+		assertEquals("VariableObj", var.getClass().getSimpleName());
 	}
 }

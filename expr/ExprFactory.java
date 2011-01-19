@@ -4,7 +4,9 @@ package expr;
  * Static factory for creating the four types of expressions possible.
  */
 final class ExprFactory {
-	private ExprFactory() {}
+	private ExprFactory() {
+	}
+
 	/**
 	 * Make a literal expression.
 	 * 
@@ -42,10 +44,27 @@ final class ExprFactory {
 	 * @return an expression meaning rator(rand0, rand1)
 	 */
 	static Expr makeApp2(int rator, Expr rand0, Expr rand1) {
+		if (rator == ExprConstants.POW && (rand1 instanceof LiteralExpr)
+				&& Math.floor(rand1.value()) == rand1.value())
+			return new PolynomialExpr(rand0, rator, rand1);
+		if (rator == ExprConstants.MUL && (rand0 instanceof LiteralExpr)
+				&& (Math.floor(rand0.value()) == rand0.value()))
+			return new PolynomialExpr(rand0, rator, rand1);
+		if ((rator == ExprConstants.ADD || rator == ExprConstants.SUB)
+				&& (rand0 instanceof LiteralExpr || rand0 instanceof PolynomialExpr)
+				&& (rand1 instanceof LiteralExpr || rand1 instanceof PolynomialExpr))
+			if (rand0 instanceof PolynomialExpr
+					&& rand1 instanceof PolynomialExpr
+					&& ((PolynomialExpr) rand0).var != ((PolynomialExpr) rand1).var) {
+				// we can't combine polynomials of different variables
+			} else
+				return new PolynomialExpr(rand0, rator, rand1);
+		if ((rator == ExprConstants.ADD || rator == ExprConstants.SUB)
+				&& ((rand0 instanceof PolynomialExpr && ((PolynomialExpr) rand0).var == rand1) || (rand1 instanceof PolynomialExpr && ((PolynomialExpr) rand1).var == rand0)))
+			return new PolynomialExpr(rand0,rator,rand1);
 		Expr app = new BinaryExpr(rator, rand0, rand1);
 		return rand0 instanceof LiteralExpr && rand1 instanceof LiteralExpr ? new LiteralExpr(
-				app.value())
-				: app;
+				app.value()) : app;
 	}
 
 	/**
@@ -60,8 +79,7 @@ final class ExprFactory {
 	 * @return an expression meaning `if test, then consequent, else
 	 *         alternative'
 	 */
-	static Expr makeIfThenElse(Expr test, Expr consequent,
-			Expr alternative) {
+	static Expr makeIfThenElse(Expr test, Expr consequent, Expr alternative) {
 		Expr cond = new ConditionalExpr(test, consequent, alternative);
 		if (test instanceof LiteralExpr)
 			return test.value() != 0 ? consequent : alternative;
@@ -195,5 +213,111 @@ final class ConditionalExpr implements Expr {
 	@Override
 	public double value() {
 		return test.value() != 0 ? consequent.value() : alternative.value();
+	}
+}
+
+final class PolynomialExpr implements Expr {
+	final double[] coeff;
+	final Expr var;
+
+	PolynomialExpr(Expr a, int rator, Expr b) {
+		switch (rator) {
+		case ExprConstants.POW:
+			final int exponent = (int) b.value();
+			coeff = new double[exponent + 1];
+			coeff[exponent] = 1;
+			var = a;
+			break;
+		case ExprConstants.MUL:
+			final double factor = a.value();
+
+			if (!(b instanceof PolynomialExpr)) {
+				coeff = new double[2];
+				coeff[1] = factor;
+				var = b;
+				return;
+			}
+			coeff = ((PolynomialExpr) b).coeff;
+			for (int i = 0; i < coeff.length; ++i) {
+				coeff[i] *= factor;
+			}
+			var = ((PolynomialExpr) b).var;
+			break;
+		case ExprConstants.ADD:
+		case ExprConstants.SUB:
+			if (a instanceof LiteralExpr && b instanceof LiteralExpr) {
+				coeff = new double[1];
+				coeff[0] = rator == ExprConstants.ADD ? a.value() + b.value()
+						: a.value() - b.value();
+				var = null;
+			} else if (a instanceof PolynomialExpr
+					&& b instanceof PolynomialExpr) {
+				double[] bigger, smaller;
+				double[] alist = ((PolynomialExpr) a).coeff;
+				double[] blist = ((PolynomialExpr) b).coeff;
+				if (alist.length > blist.length) {
+					bigger = alist;
+					smaller = blist;
+				} else {
+					bigger = blist;
+					smaller = alist;
+				}
+				coeff = bigger;
+				for (int i = 0; i < smaller.length; ++i) {
+					coeff[i] = rator == ExprConstants.ADD ? alist[i] + blist[i]
+							: alist[i] - blist[i];
+				}
+				var = ((PolynomialExpr) a).var;
+			} else {
+				// one is polynomial, other is literal or variable
+				if (a instanceof PolynomialExpr) {
+					coeff = ((PolynomialExpr) a).coeff;
+					var = ((PolynomialExpr) a).var;
+					if(b instanceof LiteralExpr)
+						coeff[0] += rator == ExprConstants.ADD ? b.value() : -b
+								.value();
+					else
+						coeff[1] += rator == ExprConstants.ADD ? 1 : -1;
+				} else {
+					coeff = ((PolynomialExpr) b).coeff;
+					var = ((PolynomialExpr) b).var;
+					if (rator == ExprConstants.SUB) {
+						for (int i = 0; i < coeff.length; ++i)
+							coeff[i] *= -1;
+					}
+					if(a instanceof LiteralExpr)
+						coeff[0] += a.value();
+					else
+						coeff[1] += 1;
+				}
+			}
+			break;
+		default:
+			coeff = null;
+			var = null;
+		}
+	}
+
+	public int terms() {
+		int i = 0;
+		for (int j = 0; j < coeff.length; ++j)
+			if (coeff[j] != 0)
+				i++;
+		return i;
+	}
+
+	/**
+	 * To avoid summary execution, using this algorithm from Numerical Recipies
+	 * (1992 version in C)
+	 */
+	@Override
+	public double value() {
+		if (coeff.length == 1)
+			return coeff[0];
+		final double variable = var.value();
+		double p = coeff[coeff.length - 1];
+		for (int j = coeff.length - 2; j >= 0; j--)
+			p = p * variable + coeff[j];
+		return p;
 	}
 }
