@@ -18,7 +18,7 @@
 //
 // $ java expr.test.Example 'sin (pi/4 x)' 0 4 1
 // I don't understand your formula "sin (pi/4 x)".
-// 
+//
 // I got as far as "sin (pi/4" and then saw "x".
 // I expected ")" at that point, instead.
 // An example of a formula I can parse is "sin (pi/4 + x)".
@@ -35,24 +35,25 @@ import expr.VariableFactory;
  * A simple example of parsing and evaluating an expression.
  */
 public class Example {
-	public static void main(String[] args) {
 
-		Expr expr;
-		try {
-			expr = (new Parser()).parseString(args[0]);
-		} catch (SyntaxException e) {
-			System.err.println(e.explain());
-			return;
-		}
+    public static void main(String[] args) {
 
-		double low = Double.valueOf(args[1]).doubleValue();
-		double high = Double.valueOf(args[2]).doubleValue();
-		double step = Double.valueOf(args[3]).doubleValue();
+        Expr expr;
+        try {
+            expr = (new Parser()).parseString(args[0]);
+        } catch (SyntaxException e) {
+            System.err.println(e.explain());
+            return;
+        }
 
-		Variable x = VariableFactory.make("x");
-		for (double xval = low; xval <= high; xval += step) {
-			x.setValue(xval);
-			System.out.println(expr.value());
-		}
-	}
+        double low = Double.valueOf(args[1]).doubleValue();
+        double high = Double.valueOf(args[2]).doubleValue();
+        double step = Double.valueOf(args[3]).doubleValue();
+
+        Variable x = VariableFactory.make("x");
+        for (double xval = low; xval <= high; xval += step) {
+            x.setValue(xval);
+            System.out.println(expr.value());
+        }
+    }
 }

@@ -10,11 +10,12 @@ package expr;
  * @see VariableFactory
  */
 public interface Variable extends Expr {
-	/**
-	 * Set the value.
-	 * 
-	 * @param value
-	 *            the new value
-	 */
-	public void setValue(double value);
+
+    /**
+     * Set the value.
+     * 
+     * @param value
+     *            the new value
+     */
+    public void setValue(double value);
 }

@@ -11,10 +11,10 @@ package expr;
  */
 public interface Expr {
 
-	/**
-	 * Calculate the expression's value.
-	 * 
-	 * @return the value given the current variable values
-	 */
-	public double value();
+    /**
+     * Calculate the expression's value.
+     * 
+     * @return the value given the current variable values
+     */
+    public double value();
 }
