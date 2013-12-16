@@ -1,0 +1,27 @@
+apply plugin: "java"
+
+repositories {
+    mavenCentral()
+}
+
+sourceSets {
+	main {
+		java {
+			srcDir "./"
+		}
+	}
+}
+
+dependencies {
+	compile group: 'junit', name: 'junit', version: '4.+'
+}
+
+jar {
+	include("expr/**")
+	exclude("expr/test/**")
+
+	manifest {
+		attributes "Implementation-Title": "Expressions"
+		attributes "Implementation-Version": 1
+	}
+}
