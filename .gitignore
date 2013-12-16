@@ -4,3 +4,7 @@ expr.jar
 ant-bin
 doc
 last-benchmark-run
+
+# Gradle
+build/
+.gradle
